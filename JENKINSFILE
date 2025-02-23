@@ -9,6 +9,7 @@ pipeline {
             steps {
                 deleteDir()
                 checkout scm
+                sh 'wget https://raw.githubusercontent.com/anieto-unir/todo-list-aws-config/refs/heads/production/samconfig.toml'
                 echo "Code"
             }
         }
