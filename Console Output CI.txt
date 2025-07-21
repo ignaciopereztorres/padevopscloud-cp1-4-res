@@ -1,0 +1,206 @@
+Started by user Ignacio Pérez Torres
+[Pipeline] Start of Pipeline
+[Pipeline] node
+Running on Jenkins in /var/lib/jenkins/workspace/CI
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Get Code)
+[Pipeline] deleteDir
+[Pipeline] withCredentials
+Masking supported pattern matches of $URL
+[Pipeline] {
+[Pipeline] sh
++ echo Esta es la URL de Ignacio: ****
+Esta es la URL de Ignacio: ****
++ git clone **** .
+Cloning into '.'...
++ git checkout develop
+Switched to a new branch 'develop'
+Branch 'develop' set up to track remote branch 'develop' from 'origin'.
++ wget https://raw.githubusercontent.com/anieto-unir/todo-list-aws-config/refs/heads/staging/samconfig.toml
+--2025-07-20 17:31:30--  https://raw.githubusercontent.com/anieto-unir/todo-list-aws-config/refs/heads/staging/samconfig.toml
+Resolving raw.githubusercontent.com (raw.githubusercontent.com)... 185.199.110.133, 185.199.111.133, 185.199.108.133, ...
+Connecting to raw.githubusercontent.com (raw.githubusercontent.com)|185.199.110.133|:443... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 225 [text/plain]
+Saving to: ‘samconfig.toml’
+
+     0K                                                       100% 6.26M=0s
+
+2025-07-20 17:31:30 (6.26 MB/s) - ‘samconfig.toml’ saved [225/225]
+
+[Pipeline] }
+[Pipeline] // withCredentials
+[Pipeline] echo
+Code
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Static)
+[Pipeline] sh
++ python3 -m flake8 --exit-zero --format=pylint src
++ python3 -m bandit --exit-zero -r src -f custom -o bandit.out --severity-level medium --msg-template {abspath}:{line}: [{test_id}] {msg}
+[main]	INFO	profile include tests: None
+[main]	INFO	profile exclude tests: None
+[main]	INFO	cli include tests: None
+[main]	INFO	cli exclude tests: None
+[main]	INFO	running on Python 3.10.12
+[custom]	INFO	Result written to file: bandit.out
+[Pipeline] recordIssues
+[Flake8] Searching for all files in '/var/lib/jenkins/workspace/CI' that match the pattern 'flake8.out'
+[Flake8] Traversing of symbolic links: enabled
+[Flake8] -> found 1 file
+[Flake8] Skipping file 'flake8.out' because it's empty
+[Flake8] Skipping post processing
+[Flake8] No filter has been set, publishing all 0 issues
+[Flake8] Repository miner is not configured, skipping repository mining
+[Flake8] Searching for all files in '/var/lib/jenkins/workspace/CI' that match the pattern 'flake8.out'
+[Flake8] Traversing of symbolic links: enabled
+[Flake8] -> found 1 file
+[Flake8] Skipping file 'flake8.out' because it's empty
+[Flake8] Skipping post processing
+[Flake8] No filter has been set, publishing all 0 issues
+[Flake8] Repository miner is not configured, skipping repository mining
+[Flake8] Reference build recorder is not configured
+[Flake8] No valid reference build found
+[Flake8] All reported issues will be considered outstanding
+[Flake8] No quality gates have been set - skipping
+[Flake8] Health report is disabled - skipping
+[Flake8] Created analysis result for 0 issues (found 0 new issues, fixed 0 issues)
+[Flake8] Attaching ResultAction with ID 'flake8' to build 'CI #8'.
+[Checks API] No suitable checks publisher found.
+[Pipeline] recordIssues
+[Bandit] Searching for all files in '/var/lib/jenkins/workspace/CI' that match the pattern 'bandit.out'
+[Bandit] Traversing of symbolic links: enabled
+[Bandit] -> found 1 file
+[Bandit] Skipping file 'bandit.out' because it's empty
+[Bandit] Skipping post processing
+[Bandit] No filter has been set, publishing all 0 issues
+[Bandit] Repository miner is not configured, skipping repository mining
+[Bandit] Searching for all files in '/var/lib/jenkins/workspace/CI' that match the pattern 'bandit.out'
+[Bandit] Traversing of symbolic links: enabled
+[Bandit] -> found 1 file
+[Bandit] Skipping file 'bandit.out' because it's empty
+[Bandit] Skipping post processing
+[Bandit] No filter has been set, publishing all 0 issues
+[Bandit] Repository miner is not configured, skipping repository mining
+[Bandit] Reference build recorder is not configured
+[Bandit] No valid reference build found
+[Bandit] All reported issues will be considered outstanding
+[Bandit] No quality gates have been set - skipping
+[Bandit] Health report is disabled - skipping
+[Bandit] Created analysis result for 0 issues (found 0 new issues, fixed 0 issues)
+[Bandit] Attaching ResultAction with ID 'pylint' to build 'CI #8'.
+[Checks API] No suitable checks publisher found.
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Deploy)
+[Pipeline] sh
++ sam build
+Building codeuri: /var/lib/jenkins/workspace/CI/src runtime: python3.10 architecture: x86_64 functions: CreateTodoFunction, ListTodosFunction, GetTodoFunction, UpdateTodoFunction, DeleteTodoFunction
+ Running PythonPipBuilder:ResolveDependencies
+ Running PythonPipBuilder:CopySource
+
+Build Succeeded
+
+Built Artifacts  : .aws-sam/build
+Built Template   : .aws-sam/build/template.yaml
+
+Commands you can use next
+=========================
+[*] Validate SAM template: sam validate
+[*] Invoke Function: sam local invoke
+[*] Test Function in the Cloud: sam sync --stack-name {{stack-name}} --watch
+[*] Deploy: sam deploy --guided
++ sam deploy --resolve-s3 --stack-name todo-list-aws-staging --region us-east-1 --no-fail-on-empty-changeset --parameter-overrides Stage=staging
+
+		Managed S3 bucket: aws-sam-cli-managed-default-samclisourcebucket-vyni7pamfuhc
+		A different default S3 bucket can be set in samconfig.toml
+		Or by specifying --s3-bucket explicitly.
+File with same data already exists at d478be87ac2f3013b9f7b6b02e370fc8, skipping upload
+File with same data already exists at d478be87ac2f3013b9f7b6b02e370fc8, skipping upload
+File with same data already exists at d478be87ac2f3013b9f7b6b02e370fc8, skipping upload
+File with same data already exists at d478be87ac2f3013b9f7b6b02e370fc8, skipping upload
+File with same data already exists at d478be87ac2f3013b9f7b6b02e370fc8, skipping upload
+
+	Deploying with following values
+	===============================
+	Stack name                   : todo-list-aws-staging
+	Region                       : us-east-1
+	Confirm changeset            : False
+	Disable rollback             : False
+	Deployment s3 bucket         : aws-sam-cli-managed-default-samclisourcebucket-vyni7pamfuhc
+	Capabilities                 : null
+	Parameter overrides          : {"Stage": "staging"}
+	Signing Profiles             : {}
+
+Initiating deployment
+=====================
+
+File with same data already exists at dc4f99124488cb46d0c5d591d5bc42cd.template, skipping upload
+
+
+Waiting for changeset to be created..
+
+No changes to deploy. Stack todo-list-aws-staging is up to date
++ aws cloudformation describe-stacks --stack-name todo-list-aws-staging --query Stacks[0].Outputs[?OutputKey==`BaseUrlApi`].OutputValue --output text
++ BASE_URL=https://ce3dgzhrfg.execute-api.us-east-1.amazonaws.com/Prod
++ echo export BASE_URL=https://ce3dgzhrfg.execute-api.us-east-1.amazonaws.com/Prod
++ chmod a+x env.sh
++ echo La URL de la API es: https://ce3dgzhrfg.execute-api.us-east-1.amazonaws.com/Prod
+La URL de la API es: https://ce3dgzhrfg.execute-api.us-east-1.amazonaws.com/Prod
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Test)
+[Pipeline] sh
++ . ./env.sh
++ export BASE_URL=https://ce3dgzhrfg.execute-api.us-east-1.amazonaws.com/Prod
++ python3 -m pytest --junit-xml=result-int.xml test/integration/todoApiTest.py
+============================= test session starts ==============================
+platform linux -- Python 3.10.12, pytest-8.4.1, pluggy-1.6.0
+rootdir: /var/lib/jenkins/workspace/CI
+configfile: pytest.ini
+collected 5 items
+
+test/integration/todoApiTest.py .....                                    [100%]
+
+=============================== warnings summary ===============================
+test/integration/todoApiTest.py:22
+  /var/lib/jenkins/workspace/CI/test/integration/todoApiTest.py:22: PytestUnknownMarkWarning: Unknown pytest.mark.smoke - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.smoke
+
+test/integration/todoApiTest.py:78
+  /var/lib/jenkins/workspace/CI/test/integration/todoApiTest.py:78: PytestUnknownMarkWarning: Unknown pytest.mark.smoke - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.smoke
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+------- generated xml file: /var/lib/jenkins/workspace/CI/result-int.xml -------
+======================== 5 passed, 2 warnings in 16.63s ========================
+[Pipeline] junit
+Recording test results
+[Checks API] No suitable checks publisher found.
+[Pipeline] script
+[Pipeline] {
+[Pipeline] }
+[Pipeline] // script
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Promote)
+[Pipeline] sh
++ git checkout master
+Switched to a new branch 'master'
+Branch 'master' set up to track remote branch 'master' from 'origin'.
++ git config merge.ours.driver true
++ git merge develop --no-edit
+Already up to date.
++ git push
+Everything up-to-date
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] }
+[Pipeline] // node
+[Pipeline] End of Pipeline
+Finished: SUCCESS
