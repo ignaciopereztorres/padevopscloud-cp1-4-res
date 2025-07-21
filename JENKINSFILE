@@ -8,8 +8,13 @@ pipeline {
         stage('Get Code') {
             steps {
                 deleteDir()
-                checkout scm
-                sh 'wget https://raw.githubusercontent.com/anieto-unir/todo-list-aws-config/refs/heads/production/samconfig.toml'
+                withCredentials([string(credentialsId: 'URL-test-todo', variable: 'URL')]) {
+                    sh '''
+                        git clone ${URL} .
+                        git checkout master
+                        wget https://raw.githubusercontent.com/anieto-unir/todo-list-aws-config/refs/heads/production/samconfig.toml
+                    '''
+                }
                 echo "Code"
             }
         }
