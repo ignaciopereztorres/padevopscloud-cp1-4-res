@@ -12,3 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Hago mi primer cambio
 
+## [1.0.7] - 2025-07-21
+### Added
+- Hago mi segundo cambio para probar el Multibranch Pipeline
+
